@@ -1,5 +1,6 @@
 from discord.ext import commands
 
+
 class EventsCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -34,6 +35,7 @@ class EventsCog(commands.Cog):
             result += f"\033[1;38;2;{r};{g};{b}m{char}"
 
         return result + "\033[0m"
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(EventsCog(bot))
