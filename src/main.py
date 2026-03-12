@@ -19,20 +19,16 @@ async def main():
     bot = commands.Bot(command_prefix='!', intents=intents)
     
     await bot.load_extension("bot.cogs.utility")
-    @bot.event
-    async def on_ready():
-        if args.deploy:
-            try:
-                print("Syncing application commands...")
-                await bot.tree.sync()
-                print("Application commands synced")
-            except discord.Forbidden:
-                print("Warning: Unable to sync application commands - ensure the bot has the 'applications.commands' scope enabled.")
-
-        if not bot.user:
-            print("Bot is not logged in")
-            return
-        print(f'Logged in as {bot.user} (ID: {bot.user.id})')
+    
+    if args.deploy:
+        try:
+            print("Syncing application commands...")
+            await bot.tree.sync()
+            print("Application commands synced")
+        except discord.Forbidden:
+            print("Warning: Unable to sync application commands - ensure the bot has the 'applications.commands' scope enabled.")
+    
+    await bot.load_extension("bot.cogs.events")
 
     token = os.getenv("TOKEN")
     if token is None:
