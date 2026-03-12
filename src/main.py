@@ -1,27 +1,33 @@
 import discord
 import os
 import asyncio
+import argparse
 from dotenv import load_dotenv
 from discord.ext import commands
 
 load_dotenv()
 
 async def main():
-
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--deploy", action="store_true")
+    args = parser.parse_args()
+    
     intents = discord.Intents.default()
     intents.message_content = True
     intents.members = True
 
     bot = commands.Bot(command_prefix='!', intents=intents)
     
+    await bot.load_extension("bot.cogs.utility")
     @bot.event
     async def on_ready():
-        await bot.load_extension("bot.cogs.utility")
-        try:
-            await bot.tree.sync()
-        except discord.Forbidden:
-            print("Warning: Unable to sync application commands - ensure the bot has the 'applications.commands' scope enabled.")
-        await bot.tree.sync()
+        if args.deploy:
+            try:
+                print("Syncing application commands...")
+                await bot.tree.sync()
+                print("Application commands synced")
+            except discord.Forbidden:
+                print("Warning: Unable to sync application commands - ensure the bot has the 'applications.commands' scope enabled.")
 
         if not bot.user:
             print("Bot is not logged in")
