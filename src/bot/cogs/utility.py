@@ -37,10 +37,10 @@ class UtilityCog(commands.Cog):
         
         embed.add_field(name="Roles", value=", ".join(server_info.roles) + f" ({len(server_info.roles)})", inline=False)
         
-        if not interaction.user.avatar:
-            await interaction.followup.send("Unable to get user avatar")
-            return
-        embed.set_footer(text=f"Asked by {interaction.user.name}", icon_url=interaction.user.avatar.url)
+        if interaction.user.avatar:
+            embed.set_footer(text=f"Asked by {interaction.user.name}", icon_url=interaction.user.avatar.url)
+        else:
+            embed.set_footer(text=f"Asked by {interaction.user.name}")
         
         embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/1343460842318073896/1481716543644766291/server-info-thumbnail.jpg?ex=69b45390&is=69b30210&hm=c3b7477fbf2284cbe131840b616a5f6ff0322f6cf703a06c158bd84f1f61e8f1&")
         await interaction.followup.send(embed=embed)
