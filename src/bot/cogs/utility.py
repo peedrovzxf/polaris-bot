@@ -4,8 +4,9 @@ from discord.ext import commands
 from application.utility_service import UtilityService
 
 class UtilityCog(commands.Cog):
-    def __init__(self, bot: commands.Bot):
+    def __init__(self, bot: commands.Bot, utility_service: UtilityService):
         self.bot = bot
+        self.utility_service = utility_service
     
     @app_commands.command(name="ping", description="Ping the bot")
     async def ping(self, interaction: discord.Interaction):
@@ -19,8 +20,7 @@ class UtilityCog(commands.Cog):
         if not guild:
             await interaction.followup.send("You must be in a guild to use this command")
             return
-        utility_service = UtilityService()
-        server_info = utility_service.get_server_info(guild)
+        server_info = self.utility_service.get_server_info(guild)
 
         if not server_info:
             await interaction.followup.send("Unable to get server info")
@@ -46,4 +46,4 @@ class UtilityCog(commands.Cog):
         await interaction.followup.send(embed=embed)
 
 async def setup(bot: commands.Bot):
-    await bot.add_cog(UtilityCog(bot))
+    await bot.add_cog(UtilityCog(bot, UtilityService()))
